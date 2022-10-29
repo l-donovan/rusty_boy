@@ -1,4 +1,4 @@
-use crate::mem_seg::{MemorySegment, MemCommand};
+use crate::mem_seg::{MemCommand, MemorySegment};
 use crate::{cpu::CPU, mem::MappedMemory};
 use std::alloc::{alloc, Layout};
 
@@ -14,14 +14,20 @@ impl IoMemory {
         match addr {
             0x0042 => 0x00,
             0x0044 => 0x90,
-            _ => 0,
+            _ => {
+                warn!("Unknown IO peek address 0x{:04x}", addr);
+                0
+            }
         }
     }
 
     fn poke(&mut self, addr: u16, val: u8) -> MemCommand {
         match addr {
             0x0050 => MemCommand::UnmapBootstrap,
-            _ => MemCommand::NOP,
+            _ => {
+                warn!("Unknown IO poke address 0x{:04x}", addr);
+                MemCommand::NOP
+            }
         }
     }
 }

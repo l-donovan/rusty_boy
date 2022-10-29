@@ -3,7 +3,6 @@ use std::alloc::{alloc, dealloc, Layout};
 use std::fs::File;
 use std::ptr::null_mut;
 
-use crate::cpu::CPU;
 use crate::mem_io::IoMemory;
 use crate::mem_mmap::MmapWrapper;
 use crate::mem_seg::{Mapping, MemCommand};
@@ -92,8 +91,8 @@ impl MappedMemory {
                 let (offset, underflow) = addr.overflowing_sub(mapping.start);
 
                 if !underflow && offset <= mapping.size {
-                    match mapping.target.set(addr, val) {
-                        MemCommand::NOP => {},
+                    match mapping.target.set(offset, val) {
+                        MemCommand::NOP => {}
                         MemCommand::UnmapBootstrap => self.unmap_bootstrap(),
                     }
 

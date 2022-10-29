@@ -3,6 +3,7 @@ use winit::event_loop::EventLoop;
 use winit::window::Window;
 
 use crate::mem::MappedMemory;
+use crate::util;
 
 pub struct LCD {
     background_enabled: bool,
@@ -58,25 +59,15 @@ impl LCD {
         return lcd;
     }
 
-    fn bit_is_set(val: u8, bit: u8) -> bool {
-        val & (1u8 << bit) != 0
-    }
-
-    fn set_bit(val: u8, bit: u8, enable: bool) -> u8 {
-        let uval = enable as u8;
-
-        (val & !(1u8 << bit)) | (uval << bit)
-    }
-
     pub fn set_lcdc(&mut self, val: u8) {
-        self.background_enabled = LCD::bit_is_set(val, 0);
-        self.obj_enabled = LCD::bit_is_set(val, 1);
-        self.obj_size = LCD::bit_is_set(val, 2);
-        self.background_tilemap = LCD::bit_is_set(val, 3);
-        self.background_tiles = LCD::bit_is_set(val, 4);
-        self.window_enabled = LCD::bit_is_set(val, 5);
-        self.window_tilemap = LCD::bit_is_set(val, 6);
-        self.lcd_enabled = LCD::bit_is_set(val, 7);
+        self.background_enabled = util::bit_is_set(val, 0);
+        self.obj_enabled = util::bit_is_set(val, 1);
+        self.obj_size = util::bit_is_set(val, 2);
+        self.background_tilemap = util::bit_is_set(val, 3);
+        self.background_tiles = util::bit_is_set(val, 4);
+        self.window_enabled = util::bit_is_set(val, 5);
+        self.window_tilemap = util::bit_is_set(val, 6);
+        self.lcd_enabled = util::bit_is_set(val, 7);
     }
 
     pub fn draw(&mut self, mem: &mut MappedMemory) {
